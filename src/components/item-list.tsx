@@ -1,7 +1,13 @@
+import Item from "./item";
+
 export default function ItemsList() {
   return (
-    <div>
-      
-    </div>
+    <>
+      {Array.from({ length: 10 }).map((_, i) => (
+        <div key={i} className="border-2 inline-block">
+          <Item />
+        </div>
+      ))}
+    </>
   )
 }

@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/table";
 import React from "react";
 import { useRouter } from "next/navigation";
+import { Pickaxe, UserCheck } from "lucide-react";
           // import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface DataTableProps<TData, TValue> {
@@ -72,9 +73,19 @@ export function DataTable<TData, TValue>({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
+                      {cell.column.getIndex() !== 3 ? (
+                        flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )
+                      ) : (
+                        <>
+                          {cell.getValue() as number === 1 ? (
+                            <Pickaxe color="#febc2e" size={20} />
+                          ) : (
+                            <UserCheck color="#3baa36" size={20} />
+                          )}
+                        </>
                       )}
                     </TableCell>
                   ))}

@@ -1,5 +1,4 @@
-import { GListForm, columns } from "./columns";
-import { DataTable } from "./data-table";
+import ItemsList from "@/components/item-list";
 import GListMenu from "./glist-menu";
 
 async function getData(): Promise<GListForm[]> {
@@ -88,7 +87,9 @@ export default async function GListForm() {
       <div className="flex items-center justify-end flex-1 p-1">
         <GListMenu />
       </div>
-      <DataTable columns={columns} data={data} />
+      <ItemsList />
+      {/* max-w-[150px] max-h-[150px] overflow-auto */}
+      {/* <DataTable columns={columns} data={data} /> */}
     </div>
   );
 }
