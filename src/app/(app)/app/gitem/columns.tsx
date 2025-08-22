@@ -2,17 +2,9 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ItemProps } from "@/types/item-props";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type GItemList = {
-  id: number;
-  name: number;
-  defaultQuantity: number;
-  unitName: string;
-};
-
-export const columns: ColumnDef<GItemList>[] = [
+export const columns: ColumnDef<ItemProps>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -40,6 +32,10 @@ export const columns: ColumnDef<GItemList>[] = [
   {
     accessorKey: "defaultQuantity",
     header: "Quantity",
+  },
+  {
+    accessorKey: "durationDays",
+    header: "Duration Days",
   },
   {
     accessorKey: "unitName",

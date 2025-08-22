@@ -1,90 +1,81 @@
-import { Glist, columns } from "./columns";
+"use client";
+
+import { useState } from "react";
+import { columns } from "./columns";
 import { DataTable } from "./data-table";
+import { ListProps } from "@/types/list-props";
+import { GListListProps } from "@/types/glist-save-props";
+import { GListDialog } from "./glist-dialog";
+import { useRouter } from "next/navigation";
 
-async function getData(): Promise<Glist[]> {
-  // Fetch data from your API here.
-  return [
-    {
-      id: "728ed521",
-      name: "List of bla bla bla",
-      date: "03/25/2025",
-      status: 1, //in progress
-    },
-    {
-      id: "728ed522",
-      name: "Bino's list",
-      date: "03/20/2025",
-      status: 1, //in progress
-    },
-    {
-      id: "728ed523",
-      name: "Nesc's list",
-      date: "03/15/2025",
-      status: 2, // done
-    },
-    {
-      id: "728ed524",
-      name: "I duno",
-      date: "03/10/2025",
-      status: 2,
-    },
-    {
-      id: "728ed525",
-      name: "Arnaldo's list",
-      date: "03/05/2025",
-      status: 2,
-    },
-    {
-      id: "728ed526",
-      name: "brooooooooooooo",
-      date: "03/02/2025",
-      status: 2,
-    },
-    {
-      id: "728ed527",
-      name: "bla bla bla",
-      date: "02/23/2025",
-      status: 2,
-    },
-    {
-      id: "728ed528",
-      name: "bla bla bla ahahahhahhh",
-      date: "02/10/2025",
-      status: 2,
-    },
-    {
-      id: "728ed52f",
-      name: "Chiarelli 4",
-      date: "02/01/2025",
-      status: 2,
-    },
-    {
-      id: "728ed52g",
-      name: "Chiarelli 3",
-      date: "01/10/2025",
-      status: 2,
-    },
-    {
-      id: "728ed511",
-      name: "Chiarelli 2",
-      date: "01/08/2025",
-      status: 2,
-    },
-    {
-      id: "728ed512",
-      name: "Chiarelli 2",
-      date: "01/07/2025",
-      status: 2,
-    },
-  ];
-}
+export default function GList({
+  list,
+  onSave,
+  onDuplicateList,
+  onArchiveList,
+}: GListListProps) {
+  const router = useRouter();
+  const [selectedRow, setSelectedRow] = useState<ListProps | null>(null);
 
-export default async function GList() {
-  const data = await getData();
+  const handleSave = async (updatedList: ListProps) => {
+    try {
+      await onSave(updatedList);
+      router.refresh();
+      setSelectedRow(null);
+    } catch (error) {
+      console.error("Error saving list:", error);
+    }
+  }
+
+  const handDuplicateList = async (id: number) => {
+    try {
+      await onDuplicateList (id);
+      router.refresh();
+    } catch (error) {
+      console.error("Error on duplicating list:", error);
+    }
+  }
+
+  const handArchiveList = async (id: number) => {
+    try {
+      await onArchiveList(id);
+      router.refresh();
+    } catch (error) {
+      console.error("Error on archiving list:", error);
+    }
+  }
+
+  const handleAction = (action: string, item: ListProps) => {
+    switch (action) {
+      case "duplicate":
+        handDuplicateList(item.id);
+        break;
+      case "edit":
+        setSelectedRow(item);
+        break;
+      case "archive":
+        handArchiveList(item.id);
+        break;
+      default:
+        console.warn("Unknown action:", action);  
+    }
+    router.refresh();
+  };
 
   return (
     <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={data} />
+      <DataTable
+        columns={columns}
+        data={list}
+        onAction={handleAction}
+      />
+      {selectedRow && (
+        <GListDialog
+          list={selectedRow}
+          onSave={handleSave}
+          onClose={() => setSelectedRow(null)}
+        />
+      )}
     </div>
   );
 }

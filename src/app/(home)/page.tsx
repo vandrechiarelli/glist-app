@@ -14,6 +14,7 @@ export default function Home() {
             width={250}
             height={250}
             className="rouded-md"
+            priority
           />
         </div>
         <div className="flex w-full items-center justify-center">

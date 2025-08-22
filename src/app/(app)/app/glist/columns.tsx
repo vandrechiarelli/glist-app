@@ -2,8 +2,8 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,54 +13,25 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Checkbox } from "@/components/ui/checkbox";
+import { ListProps } from "@/types/list-props";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type GList = {
-  id: string;
-  amount: number;
-  status: "new" | "in progress" | "done";
-  email: string;
-};
-
-export const columns: ColumnDef<GList>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-  },
+export const columns: ColumnDef<ListProps>[] = [
   {
     accessorKey: "name",
     header: "Name",
   },
   {
-    accessorKey: "date",
+    accessorKey: "dateCreated",
     header: "Date",
   },
   {
-    accessorKey: "status",
-    header: "Status",
-  },
-  {
     id: "actions",
-    cell: ({ row }) => {
+    header: "Actions",
+    cell: ({ row, table }) => {
       const glistRow = row.original;
+      const onAction = table.options.meta?.onAction as
+        | ((action: string, row: ListProps) => void)
+        | undefined;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -73,15 +44,36 @@ export const columns: ColumnDef<GList>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(glistRow.id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onAction?.("duplicate", glistRow);
+              }}
             >
               Duplicate
             </DropdownMenuItem>
-            <DropdownMenuItem>Send</DropdownMenuItem>
-            <DropdownMenuItem>Archive</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                onAction?.("edit", glistRow);
+              }}
+            >
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                onAction?.("archive", glistRow);
+              }}
+            >
+              Archive
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
     },
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
   },
 ];

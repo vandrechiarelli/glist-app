@@ -1,12 +1,7 @@
 'use client'
 
 import toast, { Toaster } from 'react-hot-toast';
-
-interface HotToastProps {
-  message: string;
-  description: string;
-  duration?: number;
-}
+import { HotToastProps } from '@/types/hot-toast-props';
 
 const HotToast: React.FC<HotToastProps> = ({ message, description, duration }) => {
   return (

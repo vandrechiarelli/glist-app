@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { OctagonX, SquareCheckBig, Trash2 } from "lucide-react";
+import {SquareCheckBig, RotateCcw } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -19,7 +19,7 @@ export default function GListMenu() {
               </Link>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Save the list</p>
+              <p>Add</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -27,19 +27,7 @@ export default function GListMenu() {
           <Tooltip>
             <TooltipTrigger>
               <Link href="/app/glistItems">
-                <OctagonX color="#ff0034" />
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Remove items</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger>
-              <Link href="/app/glistItems">
-                <Trash2 color="#087bed" />
+                <RotateCcw color="#323ff5" />
               </Link>
             </TooltipTrigger>
             <TooltipContent>
